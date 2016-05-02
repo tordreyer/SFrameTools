@@ -729,14 +729,14 @@ double LeptonScaleFactors::GetElectronMVAIDWeight()
   return w;
 }
 
-double LeptonScaleFactors::GetElectronORJetTrigWeight(const std::string& sys)
-{
+//double LeptonScaleFactors::GetElectronORJetTrigWeight(const std::string& sys)
+//{
   /*  Data/MC scale factor for the "Ele30 OR PFJet320" trigger,
    *  measured as a function of the pT of the highest-pT jet;
    *  currently assigning a 1% flat systematic on the SF;
    *  Ref: https://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=290680
    */
-
+/*
   if(!m_apply) return 1.;
 
   EventCalc* calc = EventCalc::Instance();
@@ -773,6 +773,59 @@ double LeptonScaleFactors::GetElectronORJetTrigWeight(const std::string& sys)
   }
 
   file->Close();
+  delete file;
+
+  return w;
+}
+*/
+
+double LeptonScaleFactors::GetElectronORJetTrigWeight(const std::string& sys)
+{
+  /*  Data/MC scale factor for the "Ele30 OR PFJet320" trigger,
+   *  measured as a function of the pT of the highest-pT jet;
+   *  currently assigning a 1% flat systematic on the SF;
+   *  Ref: https://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=290680
+   */
+
+  if(!m_apply) return 1.;
+
+  EventCalc* calc = EventCalc::Instance();
+  std::vector< Jet >* jets = calc->GetJets();
+  if(!jets) return 1.;
+
+  TFile* file = TFile::Open("$SFRAME_DIR/SFrameTools/efficiencies/Ele30_OR_PFJet320_trigSF.root");
+  if (!file->IsOpen()){
+    std::cerr << "Could not find file with Ele30_OR_PFJet320 trigger SF";
+    std::cerr << " in $SFRAME_DIR/SFrameTools/efficiencies/.\n";
+    std::cerr << "Please make sure the file is available.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  TF1* SFfit = (TF1*)file->Get("fit");
+  if (!SFfit){
+    std::cerr << "TF1 obj not found in Ele30_OR_PFJet320_trigSF.root.\n";
+    std::cerr << "Please make sure the 'fit' function is available.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  float arg = jets->at(0).pt();
+  if(arg < SFfit->GetXmin()){ arg = SFfit->GetXmin(); }
+  else if(arg > SFfit->GetXmax()){ arg = SFfit->GetXmax(); }
+
+  double w(1.);
+  if(sys == "none"){ w = SFfit->Eval(arg); }
+  else if(sys == "UP")  { w = SFfit->Eval(arg) * (1 + 0.01); }
+  else if(sys == "DOWN"){ w = SFfit->Eval(arg) * (1 - 0.01); }
+  else{
+    std::cerr << "Incorrect argument for LeptonScaleFactors::GetElectronORJetTrigWeight().\n";
+    std::cerr << "Must be either 'none', 'UP' or 'DOWN'. Exiting.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  file->Close();
+  delete file;
+  delete SFfit;
+
 
   return w;
 }

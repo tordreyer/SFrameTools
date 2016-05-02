@@ -14,8 +14,8 @@ USERCXXFLAGS := -g
 
 
 #INCLUDES += -I$(LHAPDFDIR)/include
-INCLUDES += -I/nfs/dust/cms/user/marchesi/LHAPDF/install/include/
-
+#INCLUDES += -I/nfs/dust/cms/user/marchesi/LHAPDF/install/include/
+INCLUDES += -I/nfs/dust/cms/user/dreyert/LHAPDF-install2/include/
 
 # Include definitions
 include Makefile.defs

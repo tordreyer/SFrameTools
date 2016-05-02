@@ -36,6 +36,7 @@ struct BaseCycleContainer{
   std::vector< TopJet >* toptagjets;
   std::vector< TopJet >* higgstagjets;
   std::vector< GenTopJet >* topjetsgen;
+  std::vector< Particle >* cagenjets;
   std::vector< GenJetWithParts >* genjetswithparts;
   std::vector< TopJet >* prunedjets;
   std::vector< GenParticle >* genparticles;
@@ -69,6 +70,7 @@ struct BaseCycleContainer{
       toptagjets = 0;
       higgstagjets = 0;
       topjetsgen = 0;
+      cagenjets = 0;
       genjetswithparts = 0;
       prunedjets = 0;
       genparticles = 0;

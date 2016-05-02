@@ -53,7 +53,8 @@ void EventCalc::Reset()
   b_puisoparticles = false;
   selections.clear();
 
-
+  m_GenWeight = 1.;
+  m_RecWeight = 1.;
   m_TotalWeight = 1.;
   
   m_primlep = NULL;
@@ -481,10 +482,29 @@ void EventCalc::ProduceWeight(double weight)
   m_TotalWeight = m_TotalWeight * weight;
 }
 
+void EventCalc::ProduceGenWeight(double weight)
+{
+  m_GenWeight = m_GenWeight * weight;
+}
+
+void EventCalc::ProduceRecWeight(double weight)
+{
+  m_RecWeight = m_RecWeight * weight;
+}
+
 double EventCalc::GetWeight()
 {
+  return m_TotalWeight;
+}
 
-return m_TotalWeight;
+double EventCalc::GetGenWeight()
+{
+  return m_GenWeight;
+}
+
+double EventCalc::GetRecWeight()
+{
+  return m_RecWeight;
 }
 
 void EventCalc::PrintGenParticles(string name)

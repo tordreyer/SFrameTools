@@ -54,6 +54,9 @@ class EventCalc
   std::vector< Jet >* GetJets() { return (m_bcc ? m_bcc->jets : NULL);}
   std::vector< TopJet >* GetCAJets() {return (m_bcc ? m_bcc->topjets : NULL);}
   std::vector< TopJet >* GetPrunedCAJets() {return (m_bcc ? m_bcc->prunedjets : NULL);}
+  //////////////////////////////////////////////////////////////////////////////////////////
+  std::vector< GenTopJet >* GetGenTopJets() {return (m_bcc ? m_bcc->topjetsgen : NULL);}
+  /////////////////////////////////////////////////////////////////////////////////////////
   std::vector< GenParticle >* GetGenParticles() {return (m_bcc ? m_bcc->genparticles : NULL);}
   std::vector< Particle >* GetGenJets() {return (m_bcc ? m_bcc->genjets : NULL);}
   /// returns all stored PF particles independently of their origin (to be used with care!)
@@ -147,9 +150,13 @@ class EventCalc
 
   /// update the stored weight by multiplying it by the argument 'w'
   void ProduceWeight(double w);
+  void ProduceGenWeight(double w);
+  void ProduceRecWeight(double w);
 
   /// get the event weight
   double GetWeight();
+  double GetGenWeight();
+  double GetRecWeight();
 
   /// apply smearing of the tau energy to estimate uncertainty
   void ApplyTauEnergySmearing(double factor);
@@ -198,6 +205,8 @@ class EventCalc
   bool b_puisoparticles;
 
   // data members to store calculated results
+  double m_GenWeight;
+  double m_RecWeight;
   double m_TotalWeight;
 
   Particle* m_primlep;
